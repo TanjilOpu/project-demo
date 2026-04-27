@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Manage Books{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1>Manage Books</h1>
+      <p>Add, edit, or remove books from the library</p>
+    </div>
+    <a href="{% url 'add_book' %}" class="btn btn-primary">+ Add Book</a>
+  </div>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Author</th><th>Category</th><th>Total</th><th>Available</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td><strong>{{ book.title }}</strong></td>
+          <td>{{ book.author }}</td>
+          <td><span class="badge badge-gray">{{ book.category }}</span></td>
+          <td>{{ book.total_quantity }}</td>
+          <td>
+            {% if book.is_available %}
+              <span class="badge badge-green">{{ book.available_quantity }}</span>
+            {% else %}
+              <span class="badge badge-red">0</span>
+            {% endif %}
+          </td>
+          <td style="display:flex; gap:0.4rem;">
+            <a href="{% url 'edit_book' book.id %}" class="btn btn-outline btn-sm">Edit</a>
+            <a href="{% url 'delete_book' book.id %}" class="btn btn-red btn-sm">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center; color:var(--ink-light); padding:2rem;">No books added yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

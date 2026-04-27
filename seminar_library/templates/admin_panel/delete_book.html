@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Delete Book{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Delete Book</h1></div>
+<div class="card" style="max-width:480px;">
+  <p>Are you sure you want to delete <strong>"{{ book.title }}"</strong> by {{ book.author }}?</p>
+  <p style="color:var(--red); font-size:0.875rem; margin-top:0.5rem;">This action cannot be undone.</p>
+  <form method="post" style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-red">Yes, Delete</button>
+    <a href="{% url 'librarian_books' %}" class="btn btn-outline">Cancel</a>
+  </form>
+</div>
+{% endblock %}

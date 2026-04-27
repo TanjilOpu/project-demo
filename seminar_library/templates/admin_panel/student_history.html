@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ student.name }} — Borrow History{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>{{ student.name }}</h1>
+  <p>{{ student.email }} &nbsp;|&nbsp; {% if student.is_blocked %}<span class="badge badge-red">Blocked</span>{% else %}<span class="badge badge-green">Active</span>{% endif %}</p>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Renewed</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for b in borrows %}
+        <tr>
+          <td>{{ b.book.title }}</td>
+          <td>{{ b.issue_date }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ b.return_date|default:"—" }}</td>
+          <td>{% if b.is_renewed %}Yes{% else %}No{% endif %}</td>
+          <td>
+            {% if b.is_returned %}<span class="badge badge-green">Returned</span>
+            {% elif b.is_overdue %}<span class="badge badge-red">Overdue</span>
+            {% else %}<span class="badge badge-gold">Active</span>{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center; color:var(--ink-light); padding:1.5rem;">No borrow history.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div style="margin-top:1rem;"><a href="{% url 'librarian_students' %}" class="btn btn-outline">← Back to Students</a></div>
+{% endblock %}

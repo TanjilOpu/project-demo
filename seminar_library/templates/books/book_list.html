@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Browse Books — MBSTU Seminar Library{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Browse Books</h1>
+  <p>Welcome, {{ user.name }}. You can borrow 1 book at a time for 7 days.</p>
+</div>
+
+{% if active_borrow %}
+<div class="card" style="margin-bottom:1.5rem; border-left: 3px solid var(--gold);">
+  <p style="font-weight:600; margin-bottom:0.5rem;">📖 Currently Borrowed</p>
+  <p><strong>{{ active_borrow.book.title }}</strong> by {{ active_borrow.book.author }}</p>
+  <p style="font-size:0.875rem; color:var(--ink-light); margin-top:0.3rem;">
+    Issued: {{ active_borrow.issue_date }} &nbsp;|&nbsp;
+    Due: <strong>{{ active_borrow.due_date }}</strong>
+    {% if active_borrow.is_overdue %}
+      &nbsp;<span class="badge badge-red">OVERDUE</span>
+    {% elif active_borrow.days_until_due <= 2 %}
+      &nbsp;<span class="badge badge-gold">Due Soon</span>
+    {% endif %}
+  </p>
+  <div style="margin-top:0.75rem; display:flex; gap:0.5rem;">
+    <a href="{% url 'my_borrows' %}" class="btn btn-outline btn-sm">View Details</a>
+    {% if not active_borrow.is_renewed and not active_borrow.is_overdue %}
+      <a href="{% url 'renew_book' active_borrow.id %}" class="btn btn-gold btn-sm">Renew</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Available</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td><strong>{{ book.title }}</strong></td>
+          <td>{{ book.author }}</td>
+          <td><span class="badge badge-gray">{{ book.category }}</span></td>
+          <td>
+            {% if book.is_available %}
+              <span class="badge badge-green">{{ book.available_quantity }} left</span>
+            {% else %}
+              <span class="badge badge-red">None</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not active_borrow and book.is_available and not user.is_blocked %}
+              <a href="{% url 'borrow_book' book.id %}" class="btn btn-primary btn-sm">Borrow</a>
+            {% else %}
+              <span style="color:var(--ink-light); font-size:0.8rem;">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" style="text-align:center; color:var(--ink-light); padding:2rem;">No books available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

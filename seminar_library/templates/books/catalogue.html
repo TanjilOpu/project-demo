@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Book Catalogue — MBSTU Seminar Library{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Seminar Library Catalogue</h1>
+  <p>Browse all available books. Login to borrow.</p>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Total</th>
+          <th>Available</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr>
+          <td><strong>{{ book.title }}</strong></td>
+          <td>{{ book.author }}</td>
+          <td><span class="badge badge-gray">{{ book.category }}</span></td>
+          <td>{{ book.total_quantity }}</td>
+          <td>{{ book.available_quantity }}</td>
+          <td>
+            {% if book.is_available %}
+              <span class="badge badge-green">Available</span>
+            {% else %}
+              <span class="badge badge-red">Unavailable</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center; color:var(--ink-light); padding:2rem;">No books in the library yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if not user.is_authenticated %}
+<p style="margin-top:1.5rem; text-align:center; color:var(--ink-light);">
+  <a href="{% url 'login' %}" style="color:var(--gold); font-weight:600;">Login with your @mbstu.ac.bd email</a> to borrow books.
+</p>
+{% endif %}
+{% endblock %}

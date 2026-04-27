@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Full Borrow History{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Borrow History</h1><p>All borrow records</p></div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Student</th><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for b in borrows %}
+        <tr>
+          <td>{{ b.user.name }}</td>
+          <td>{{ b.book.title }}</td>
+          <td>{{ b.issue_date }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ b.return_date|default:"—" }}</td>
+          <td>
+            {% if b.is_returned %}<span class="badge badge-green">Returned</span>
+            {% elif b.is_overdue %}<span class="badge badge-red">Overdue</span>
+            {% else %}<span class="badge badge-gold">Active</span>{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center; color:var(--ink-light); padding:2rem;">No records.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

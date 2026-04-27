@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Borrow{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Confirm Borrow</h1></div>
+<div class="card" style="max-width:480px;">
+  <p style="margin-bottom:1rem;">You are about to borrow:</p>
+  <p style="font-size:1.1rem;"><strong>{{ book.title }}</strong> by {{ book.author }}</p>
+  <p style="color:var(--ink-light); font-size:0.875rem; margin-top:0.5rem;">Borrow period: 7 days from today. One renewal allowed.</p>
+  <form method="post" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Confirm Borrow</button>
+    <a href="{% url 'book_list' %}" class="btn btn-outline">Cancel</a>
+  </form>
+</div>
+{% endblock %}

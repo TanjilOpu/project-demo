@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}My Borrows — MBSTU Seminar Library{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>My Borrows</h1>
+</div>
+
+{% if active_borrow %}
+<div class="card" style="margin-bottom:2rem;">
+  <h2 style="font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:1rem;">Currently Borrowed</h2>
+  <table>
+    <tr><th>Book</th><td><strong>{{ active_borrow.book.title }}</strong></td></tr>
+    <tr><th>Author</th><td>{{ active_borrow.book.author }}</td></tr>
+    <tr><th>Issue Date</th><td>{{ active_borrow.issue_date }}</td></tr>
+    <tr><th>Due Date</th><td>
+      {{ active_borrow.due_date }}
+      {% if active_borrow.is_overdue %}
+        <span class="badge badge-red">OVERDUE</span>
+      {% elif active_borrow.days_until_due <= 2 %}
+        <span class="badge badge-gold">{{ active_borrow.days_until_due }} day(s) left</span>
+      {% endif %}
+    </td></tr>
+    <tr><th>Renewed</th><td>{% if active_borrow.is_renewed %}Yes (no more renewals){% else %}No{% endif %}</td></tr>
+  </table>
+  {% if not active_borrow.is_renewed and not active_borrow.is_overdue %}
+  <div style="margin-top:1rem;">
+    <a href="{% url 'renew_book' active_borrow.id %}" class="btn btn-gold">Renew for 7 more days</a>
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<div class="card" style="margin-bottom:2rem; text-align:center; padding:2rem; color:var(--ink-light);">
+  You have no active borrow. <a href="{% url 'book_list' %}" style="color:var(--gold); font-weight:600;">Browse books →</a>
+</div>
+{% endif %}
+
+{% if history %}
+<div class="card">
+  <h2 style="font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:1rem;">Borrow History</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th></tr>
+      </thead>
+      <tbody>
+        {% for b in history %}
+        <tr>
+          <td>{{ b.book.title }}</td>
+          <td>{{ b.issue_date }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ b.return_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MBSTU Seminar Library{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a1a2e;
+      --ink-light: #4a4a6a;
+      --cream: #faf8f4;
+      --paper: #ffffff;
+      --gold: #b8860b;
+      --gold-light: #f0e6c8;
+      --green: #2d6a4f;
+      --green-light: #d8f3dc;
+      --red: #9b2226;
+      --red-light: #fde8e8;
+      --border: #e0dbd0;
+      --shadow: 0 2px 12px rgba(26,26,46,0.08);
+      --radius: 6px;
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--ink);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light);
+      font-size: 1.15rem;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+    .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+    .nav-links a {
+      color: #c8c8d8;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius);
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-links a.active { color: var(--gold-light); }
+    .nav-links .btn-nav {
+      background: var(--gold);
+      color: var(--ink) !important;
+      font-weight: 600;
+    }
+    .nav-links .btn-nav:hover { background: #d4a017; }
+
+    /* MAIN */
+    main { flex: 1; max-width: 1100px; width: 100%; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    /* MESSAGES */
+    .messages { list-style: none; margin-bottom: 1.5rem; }
+    .messages li {
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .messages .success { background: var(--green-light); color: var(--green); border-left: 3px solid var(--green); }
+    .messages .error   { background: var(--red-light);   color: var(--red);   border-left: 3px solid var(--red); }
+    .messages .warning { background: var(--gold-light);  color: var(--gold);  border-left: 3px solid var(--gold); }
+    .messages .info    { background: #e8f0fe; color: #1a56db; border-left: 3px solid #1a56db; }
+
+    /* PAGE HEADER */
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .page-header p { color: var(--ink-light); font-size: 0.95rem; }
+
+    /* CARDS */
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th {
+      text-align: left;
+      padding: 0.65rem 1rem;
+      background: var(--cream);
+      border-bottom: 2px solid var(--border);
+      font-weight: 600;
+      color: var(--ink-light);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f9f7f3; }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-green  { background: var(--green-light); color: var(--green); }
+    .badge-red    { background: var(--red-light);   color: var(--red); }
+    .badge-gold   { background: var(--gold-light);  color: #7a5a00; }
+    .badge-gray   { background: #f0f0f0; color: #666; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary   { background: var(--ink);  color: white; }
+    .btn-gold      { background: var(--gold); color: white; }
+    .btn-green     { background: var(--green); color: white; }
+    .btn-red       { background: var(--red);   color: white; }
+    .btn-outline   { background: transparent; border: 1.5px solid var(--border); color: var(--ink); }
+    .btn-sm        { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+
+    /* FORMS */
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--ink-light); }
+    input[type=text], input[type=email], input[type=password], input[type=number], select, textarea {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.9rem;
+      background: var(--paper);
+      color: var(--ink);
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+    .form-error { color: var(--red); font-size: 0.8rem; margin-top: 0.3rem; }
+
+    /* STATS ROW */
+    .stats-row { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .stat-card {
+      flex: 1;
+      min-width: 160px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-card .stat-label { font-size: 0.8rem; color: var(--ink-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      border-top: 1px solid var(--border);
+      background: var(--paper);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-brand { font-size: 0.95rem; }
+      main { padding: 1.5rem 1rem; }
+      .page-header h1 { font-size: 1.5rem; }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<nav>
+  <a href="{% url 'home' %}" class="nav-brand">📚 MBSTU Seminar Library</a>
+  <div class="nav-links">
+    <a href="{% url 'home' %}">Catalogue</a>
+    {% if user.is_authenticated %}
+      {% if user.is_admin %}
+        <a href="{% url 'librarian_dashboard' %}">Dashboard</a>
+        <a href="{% url 'librarian_books' %}">Books</a>
+        <a href="{% url 'librarian_students' %}">Students</a>
+        <a href="{% url 'borrow_history' %}">History</a>
+      {% else %}
+        <a href="{% url 'book_list' %}">Browse</a>
+        <a href="{% url 'my_borrows' %}">My Borrows</a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="btn-nav">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'register' %}" class="btn-nav">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+<main>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  &copy; {% now "Y" %} MBSTU Seminar Library — Mawlana Bhashani Science and Technology University
+</footer>
+</body>
+</html>
